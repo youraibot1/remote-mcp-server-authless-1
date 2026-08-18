@@ -23,11 +23,24 @@ function createServer(env: Env) {
     },
     async ({ prompt }) => {
       const result = await env.AI.run(
-        "@cf/black-forest-labs/flux-1-schnell",
-        {
-          prompt,
-        }
-      );
+  "@cf/black-forest-labs/flux-1-schnell",
+  {
+    prompt,
+    steps: 4,
+  }
+);
+
+if (!result.image) {
+  return {
+    content: [
+      {
+        type: "text",
+        text: "Flux returned no image. Full response: " + JSON.stringify(result),
+      },
+    ],
+    isError: true,
+  };
+}
 
       return {
         content: [
